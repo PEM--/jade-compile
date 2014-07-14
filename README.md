@@ -5,9 +5,14 @@
 
 ![Jade previewer](https://raw.githubusercontent.com/PEM--/jade-compile/master/assets/capture.png)
 
+## Available settings
+* Pretty: `true` by default for prettyfying the generated HTML code.
+* Compile on save: `true` by default for refreshing preview each time the Jade code is changed.
+* Focus editor after compile: `true`by default for setting back the focus on the Jade code when preview is done.
+
 ## Additional informations
 * Some additional information on my blog site :eyeglasses:: [Jade within Atom.io](http://pem-musing.blogspot.fr/2014/07/jade-within-atomio-fasten-your-html-and.html).
-* Declare your bugs :bug: or enhancements :sunny: on [Github](https://github.com/PEM--/jade-compile/issues?state=open) :octocat: 
+* Declare your bugs :bug: or enhancements :sunny: on [Github](https://github.com/PEM--/jade-compile/issues?state=open) :octocat:
 
 ## Known limitations
 * :bug: Advanced usages such as template automatic inclusion doesn't work.
