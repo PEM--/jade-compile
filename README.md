@@ -1,7 +1,7 @@
 # jade-compile package
 
 :eyeglasses: Simple previewer package that compiles [Jade](http://jade-lang.com/) to HTML in [Atom.io](https://atom.io):
-* Mac/Linux/Windows: **CTRL**+**ALT**+**c**
+* Mac/Linux/Windows: **CTRL**+**ALT**+**j**
 
 ![Jade previewer](https://raw.githubusercontent.com/PEM--/jade-compile/master/assets/capture.png)
 
