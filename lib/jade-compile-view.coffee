@@ -1,9 +1,9 @@
 {$, $$$, EditorView, ScrollView} = require 'atom'
-jade = require 'jade'
 _ = require 'underscore-plus'
 path = require 'path'
 fs = require 'fs'
-{allowUnsafeEval} = require 'loophole'
+{allowUnsafeNewFunction} = require 'loophole'
+jade = require 'jade'
 
 module.exports =
 class JadeCompileView extends ScrollView
@@ -13,7 +13,6 @@ class JadeCompileView extends ScrollView
         @div outlet: 'compiledCode', class: 'lang-html lines'
 
   constructor: ({@editorId, @editor}) ->
-    console.log 'c-tor'
     super
     if @editorId? and not @editor
       @editor = @getEditor @editorId
@@ -22,12 +21,9 @@ class JadeCompileView extends ScrollView
       @trigger 'title-changed'
       @bindEvents()
 
-  destroy: ->
-    console.log 'Destroyed'
-    @unsubscribe()
+  destroy: -> @unsubscribe()
 
   bindEvents: ->
-    console.log 'Bind'
     @subscribe atom.syntax,
       'grammar-updated',
       _.debounce((=> @renderCompiled()), 250)
@@ -39,13 +35,11 @@ class JadeCompileView extends ScrollView
       @subscribe @editor.buffer, 'saved', => @saveCompiled()
 
   getEditor: (id) ->
-    console.log 'Editor'
     for editor in atom.workspace.getEditors()
       return editor if editor.id?.toString() is id.toString()
     null
 
   getSelectedCode: ->
-    console.log 'Selected code'
     range = @editor.getSelectedBufferRange()
     code  =
       if range.isEmpty()
@@ -54,17 +48,15 @@ class JadeCompileView extends ScrollView
         @editor.getTextInBufferRange(range)
 
   compile: (code) ->
-    console.log 'Compiled'
+    html = ''
     try
-      html = jade.render code, pretty: true
+      allowUnsafeNewFunction ->
+        html = jade.render code, pretty: true
     catch e
-      console.log '** Code', code
-      console.log '** Html', html
-      console.log '** Error', e
+      console.error 'jade-compile', e
     html
 
   saveCompiled: (callback) ->
-    console.log 'Saved compile'
     try
       text     = @compile @editor.getText()
       srcPath  = @editor.getPath()
@@ -78,7 +70,6 @@ class JadeCompileView extends ScrollView
     callback?()
 
   renderCompiled: (callback) ->
-    console.log 'Rendered'
     code = @getSelectedCode()
     try
       text = @compile code
@@ -98,7 +89,6 @@ class JadeCompileView extends ScrollView
     callback?()
 
   getTitle: ->
-    console.log 'Titled'
     if @editor?
       "Compiled #{@editor.getTitle()}"
     else

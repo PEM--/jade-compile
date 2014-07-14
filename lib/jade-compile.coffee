@@ -1,6 +1,5 @@
 url         = require 'url'
 querystring = require 'querystring'
-
 JadeCompileView = require './jade-compile-view'
 
 module.exports =
@@ -9,7 +8,6 @@ module.exports =
     focusEditorAfterCompile: false
 
   activate: ->
-    console.log 'Activated'
     atom.workspaceView.command 'jade-compile:compile', => @display()
     atom.workspace.registerOpener (uriToOpen) ->
       {protocol, host, pathname} = url.parse uriToOpen
@@ -19,14 +17,10 @@ module.exports =
       new JadeCompileView(editorId: pathname.substr(1))
 
   display: ->
-    console.log 'Displayed'
     editor     = atom.workspace.getActiveEditor()
     activePane = atom.workspace.getActivePane()
-
     return unless editor?
-
     uri = "jade-compile://editor/#{editor.id}"
-
     # If a pane with the uri
     pane = atom.workspace.paneContainer.paneForUri uri
     # If not, always split right

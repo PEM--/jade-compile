@@ -3,8 +3,7 @@
 :warning: **Work in progress** :warning:
 
 :eyeglasses: Preview/save compiled [Jade](http://jade-lang.com/) in [Atom.io](https://atom.io):
-* Mac: **⌘**+**⇧**+**c**
-* Linux/Windows: **CTRL**+**ALT**+**c**
+* Mac/Linux/Windows: **CTRL**+**ALT**+**c**
 
 
 ![A screenshot of your spankin' package](https://avatars3.githubusercontent.com/u/227831?s=460)

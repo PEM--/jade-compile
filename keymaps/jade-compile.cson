@@ -1,6 +1,4 @@
 # For more detailed documentation see
 # https://atom.io/docs/latest/advanced/keymaps
-'.platform-darwin .editor':
-  'cmd-shift-j': 'jade-compile:compile'
-'.platform-win32 .editor, .platform-linux .editor':
+'.workspace':
   'ctrl-alt-j': 'jade-compile:compile'
