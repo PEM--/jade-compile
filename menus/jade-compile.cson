@@ -1,0 +1,16 @@
+# See https://atom.io/docs/latest/creating-a-package#menus for more details
+'context-menu':
+  '.overlayer':
+    'Jade Compile': 'jade-compile:compile'
+
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'Jade Compile'
+      'submenu': [
+        { 'label': 'Compile', 'command': 'jade-compile:compile' }
+      ]
+    ]
+  }
+]
