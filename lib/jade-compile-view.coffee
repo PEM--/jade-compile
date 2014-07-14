@@ -1,8 +1,9 @@
 {$, $$$, EditorView, ScrollView} = require 'atom'
-jade                             = require 'jade'
-_                                = require 'underscore-plus'
-path                             = require 'path'
-fs                               = require 'fs'
+jade = require 'jade'
+_ = require 'underscore-plus'
+path = require 'path'
+fs = require 'fs'
+{allowUnsafeEval} = require 'loophole'
 
 module.exports =
 class JadeCompileView extends ScrollView
@@ -54,8 +55,13 @@ class JadeCompileView extends ScrollView
 
   compile: (code) ->
     console.log 'Compiled'
-    jade.render code, options:
-      pretty: true
+    try
+      html = jade.render code, pretty: true
+    catch e
+      console.log '** Code', code
+      console.log '** Html', html
+      console.log '** Error', e
+    html
 
   saveCompiled: (callback) ->
     console.log 'Saved compile'
@@ -67,33 +73,28 @@ class JadeCompileView extends ScrollView
         path.dirname(srcPath), "#{path.basename(srcPath, srcExt)}.html"
       )
       fs.writeFileSync destPath, text
-
     catch e
       console.error "jade-compile: #{e.stack}"
-
     callback?()
 
   renderCompiled: (callback) ->
     console.log 'Rendered'
     code = @getSelectedCode()
-
     try
       text = @compile code
     catch e
       text = e.stack
-
-    grammar = atom.syntax.selectGrammar("hello.html", text)
+    grammar = atom.syntax.selectGrammar('hello.html', text)
     @compiledCode.empty()
 
     for tokens in grammar.tokenizeLines(text)
-      attributes = class: "line"
+      attributes = class: 'line'
       @compiledCode.append(EditorView.buildLineHtml({tokens, text, attributes}))
 
     # Match editor styles
     @compiledCode.css
       fontSize: atom.config.get('editor.fontSize') or 12
       fontFamily: atom.config.get('editor.fontFamily')
-
     callback?()
 
   getTitle: ->
@@ -101,7 +102,7 @@ class JadeCompileView extends ScrollView
     if @editor?
       "Compiled #{@editor.getTitle()}"
     else
-      "Compiled HTML"
+      'Compiled HTML'
 
   getUri:   -> "jadecompile://editor/#{@editorId}"
-  getPath:  -> @editor?.getPath() or ""
+  getPath:  -> @editor?.getPath() or ''

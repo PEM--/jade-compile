@@ -5,10 +5,6 @@ JadeCompileView = require './jade-compile-view'
 
 module.exports =
   configDefaults:
-    grammars: [
-      'source.jade'
-    ]
-    noTopLevelFunctionWrapper: true
     compileOnSave: false
     focusEditorAfterCompile: false
 
@@ -19,7 +15,7 @@ module.exports =
       {protocol, host, pathname} = url.parse uriToOpen
       pathname = querystring.unescape(pathname) if pathname
 
-      return unless protocol is 'jadecompile:'
+      return unless protocol is 'jade-compile:'
       new JadeCompileView(editorId: pathname.substr(1))
 
   display: ->
@@ -29,12 +25,7 @@ module.exports =
 
     return unless editor?
 
-    grammars = atom.config.get('jade-compile.grammars') or []
-    unless (grammar = editor.getGrammar().scopeName) in grammars
-      console.warn("Cannot compile non-Jade to HTML")
-      return
-
-    uri = "jadecompile://editor/#{editor.id}"
+    uri = "jade-compile://editor/#{editor.id}"
 
     # If a pane with the uri
     pane = atom.workspace.paneContainer.paneForUri uri
