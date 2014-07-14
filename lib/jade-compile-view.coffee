@@ -81,7 +81,7 @@ class JadeCompileView extends ScrollView
       allowUnsafeNewFunction ->
         html = jade.render code,
           pretty: atom.config.get 'jade-compile.pretty'
-          compileDebug: true
+          compileDebug: atom.config.get 'jade-compile.compileDebug'
     catch e
       html = e.message
     html
