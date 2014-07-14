@@ -7,6 +7,7 @@
 
 ## Available settings
 * Pretty: `true` by default, used for prettyfying the generated HTML code.
+* Compile debug: `true`by default, used for Jade's error checking while developping.
 * Compile on save: `false` by default, used for refreshing preview each time the Jade code is changed.
 * Focus editor after compile: `true` by default, used for setting back the focus on the Jade code when preview is done.
 

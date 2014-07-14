@@ -81,8 +81,9 @@ class JadeCompileView extends ScrollView
       allowUnsafeNewFunction ->
         html = jade.render code,
           pretty: atom.config.get 'jade-compile.pretty'
+          compileDebug: true
     catch e
-      console.error 'jade-compile', e
+      html = e.message
     html
 
   # Public: Save compiled code.
@@ -116,7 +117,6 @@ class JadeCompileView extends ScrollView
       text = e.stack
     grammar = atom.syntax.selectGrammar 'hello.html', text
     @compiledCode.empty()
-
     for tokens in grammar.tokenizeLines text
       attributes = class: 'line'
       @compiledCode.append(EditorView.buildLineHtml {tokens, text, attributes})

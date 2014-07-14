@@ -6,6 +6,7 @@ module.exports =
   # Define default configuration
   configDefaults:
     pretty: true
+    compileDebug: true
     compileOnSave: false
     focusEditorAfterCompile: true
 
