@@ -1,5 +1,16 @@
-html
+doctype html
+html(lang="en")
   head
-    title Test file
+    title Sample Jade test
+    script(type='text/javascript').
+      if (foo) {
+         bar(1 + 5)
+      }
   body
-    p Sample paragraph
+    h1 Jade - node template engine
+    #container.col
+      p.
+        Jade is a terse and simple
+        templating language with a
+        strong focus on performance
+        and powerful features.
