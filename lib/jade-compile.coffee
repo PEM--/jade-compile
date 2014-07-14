@@ -1,4 +1,4 @@
-url         = require 'url'
+url = require 'url'
 querystring = require 'querystring'
 JadeCompileView = require './jade-compile-view'
 
@@ -6,7 +6,7 @@ module.exports =
   # Define default configuration
   configDefaults:
     pretty: true
-    compileOnSave: true
+    compileOnSave: false
     focusEditorAfterCompile: true
 
   # Public: Activate the plugin.

@@ -6,9 +6,9 @@
 ![Jade previewer](https://raw.githubusercontent.com/PEM--/jade-compile/master/assets/capture.png)
 
 ## Available settings
-* Pretty: `true` by default for prettyfying the generated HTML code.
-* Compile on save: `true` by default for refreshing preview each time the Jade code is changed.
-* Focus editor after compile: `true`by default for setting back the focus on the Jade code when preview is done.
+* Pretty: `true` by default, used for prettyfying the generated HTML code.
+* Compile on save: `false` by default, used for refreshing preview each time the Jade code is changed.
+* Focus editor after compile: `true` by default, used for setting back the focus on the Jade code when preview is done.
 
 ## Additional informations
 * Some additional information on my blog site :eyeglasses:: [Jade within Atom.io](http://pem-musing.blogspot.fr/2014/07/jade-within-atomio-fasten-your-html-and.html).
