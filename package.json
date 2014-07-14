@@ -1,12 +1,12 @@
 {
-  "name": "atom-jade-compile",
-  "main": "./lib/atom-jade-compile",
+  "name": "jade-compile",
+  "main": "./lib/jade-compile",
   "version": "0.0.0",
   "description": "Preview/save compiled Jade in Atom",
   "activationEvents": [
-    "atom-jade-compile:toggle"
+    "jade-compile:compile"
   ],
-  "repository": "https://github.com/atom/atom-jade-compile",
+  "repository": "https://github.com/PEM--/jade-compile",
   "license": "MIT",
   "engines": {
     "atom": ">0.100.0"
