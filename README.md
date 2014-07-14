@@ -1,12 +1,17 @@
 # jade-compile package
 
-:warning: **Work in progress** :warning:
-
-:eyeglasses: Preview/save compiled [Jade](http://jade-lang.com/) in [Atom.io](https://atom.io):
+:eyeglasses: Simple previewer package that compiles [Jade](http://jade-lang.com/) to HTML in [Atom.io](https://atom.io):
 * Mac/Linux/Windows: **CTRL**+**ALT**+**c**
 
+![Jade previewer](https://raw.githubusercontent.com/PEM--/jade-compile/master/assets/capture.png)
 
-![A screenshot of your spankin' package](https://avatars3.githubusercontent.com/u/227831?s=460)
+## Additional informations
+* Some additional information on my blog site :eyeglasses:: [Jade within Atom.io](http://pem-musing.blogspot.fr/2014/07/jade-within-atomio-fasten-your-html-and.html).
+* Declare your bugs :bug: or enhancements :sunny: on [Github](https://github.com/PEM--/jade-compile/issues?state=open) :octocat: 
+
+## Known limitations
+* :bug: Advanced usages such as template automatic inclusion doesn't work.
+* :bug: Single line compilation does not work.
 
 ## Acknowledgements
 * **The Atom.io team** for their incredible editor.
