@@ -1,3 +1,6 @@
+## 0.3.1 - Minor fix
+* Remove the unecessary console.log.
+
 ## 0.3.0 - Compile debug as an option
 * Setting for compile debug, set as default.
 * Catch error and set it as the default rendering.

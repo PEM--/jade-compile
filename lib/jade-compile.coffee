@@ -18,7 +18,6 @@ module.exports =
     atom.workspace.registerOpener (uriToOpen) ->
       {protocol, host, pathname} = url.parse uriToOpen
       pathname = (querystring.unescape pathname) if pathname
-      console.log 'Pathname', pathname
       return unless protocol is 'jade-compile:'
       new JadeCompileView(editorId: pathname.substr(1))
 
