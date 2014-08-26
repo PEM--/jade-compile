@@ -1,5 +1,9 @@
+## 0.4.0 - ReactEditor update
+* Small adaptations for the new ReactEditor API.
+* Update Jade dependency from 1.3.1 to 1.5.0.
+
 ## 0.3.1 - Minor fix
-* Remove the unecessary console.log.
+* Remove the unnecessary console.log.
 
 ## 0.3.0 - Compile debug as an option
 * Setting for compile debug, set as default.

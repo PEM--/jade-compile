@@ -19,7 +19,7 @@ module.exports =
       {protocol, host, pathname} = url.parse uriToOpen
       pathname = (querystring.unescape pathname) if pathname
       return unless protocol is 'jade-compile:'
-      new JadeCompileView(editorId: pathname.substr(1))
+      new JadeCompileView sourceEditorId: (pathname.substr 1)
 
   # Public: Display the content in a preview pane.
   #
@@ -29,11 +29,10 @@ module.exports =
     activePane = atom.workspace.getActivePane()
     return unless editor?
     uri = "jade-compile://editor/#{editor.id}"
-    # If a pane with the uri
-    pane = atom.workspace.paneContainer.paneForUri uri
-    # If not, always split right
-    pane ?= activePane.splitRight()
-    atom.workspace.openUriInPane(uri, pane, {}).done (jadeCompileView) ->
+    atom.workspace.open uri,
+      searchAllPanes: true
+      split: 'right'
+    .done (jadeCompileView) ->
       if jadeCompileView instanceof JadeCompileView
         jadeCompileView.renderCompiled()
         if atom.config.get 'jade-compile.compileOnSave'

@@ -1,4 +1,7 @@
-{$, $$$, EditorView, ScrollView} = require 'atom'
+# Inspiration from: https://github.com/adrianlee44/atom-coffee-compile/
+# blob/master/lib/coffee-compile-view.coffee
+
+{EditorView} = require 'atom'
 _ = require 'underscore-plus'
 path = require 'path'
 fs = require 'fs'
@@ -7,51 +10,63 @@ jade = require 'jade'
 
 module.exports =
 
-# Public: Main Jade compile view that extends the {ScrollView} prototype.
-class JadeCompileView extends ScrollView
-  @content: ->
-    @div class: 'jade-compile native-key-bindings', tabindex: -1, =>
-      @div class: 'editor editor-colors', =>
-        @div outlet: 'compiledCode', class: 'lang-html lines'
-
+# Public: Main Jade compile view that extends the {EditorView} prototype.
+class JadeCompileView extends EditorView
   # Public: C-tor
   #
-  # {@editorId - The Id of a previously allocated editor as {Number}.
-  # editor}    - The instance of a previously allocated
-  #              editor as {JadeCompileView}.
+  # @editorId     - The Id of a previously allocated editor as {Number}.
+  # @sourceEditor - The instance of the source editor.
   #
   # Returns the instanciated object as `JadeCompileView`.
-  constructor: ({@editorId, @editor}) ->
+  constructor: ({@sourceEditorId, @sourceEditor}) ->
     super
-    if @editorId? and not @editor
-      @editor = @getEditor @editorId
+    if @sourceEditorId? and not @sourceEditor
+      @sourceEditor = @getSourceEditor @sourceEditorId
+    if @sourceEditor?
+      @bindJadeCompileEvents()
+    if atom.config.get 'core.useReactEditor'
+      # set editor grammar to HTML
+      @editor.setGrammar atom.syntax.selectGrammar 'hello.html'
 
-    if @editor?
-      @trigger 'title-changed'
-      @bindEvents()
-
-  # Public: Destroy current instance.
+  # Public: Initialize current instance.
+  #
+  # options - Set options for old editor {Dictionnary}.
   #
   # Returns `undefined`.
-  destroy: -> @unsubscribe()
+  initialize: (options) ->
+    # Old EditorView requires mini editor to work properly
+    unless atom.config.get 'core.useReactEditor'
+      options.mini = true
+      super options
+      # set editor grammar to HTML
+      @editor.setGrammar atom.syntax.selectGrammar("hello.html")
+      # mini EditorView doesn't allow changing line height
+      # This is used to force line-height changes
+      @css 'line-height', atom.config.get('editor.lineHeight') or
+        @configDefaults.lineHeight
 
-  bindEvents: ->
-    @subscribe atom.syntax,
-      'grammar-updated',
-      _.debounce (=> @renderCompiled()), 250
-
-    @subscribe this, 'core:move-up', => @scrollUp()
-    @subscribe this, 'core:move-down', => @scrollDown()
-
+  # Public: Bind events on Jade compilation
+  #
+  # Returns `undefined`.
+  bindJadeCompileEvents: ->
     if atom.config.get('jade-compile.compileOnSave')
-      @subscribe @editor.buffer, 'saved', => @saveCompiled()
+      @subscribe @sourceEditor.buffer, 'saved', => @saveCompiled()
+    unless atom.config.get 'core.useReactEditor'
+      # Add scrolling to mini EditorView
+      @scrollView.on 'mousewheel', (e) =>
+        if delta = e.originalEvent.wheelDeltaY
+          @scrollTop(@scrollTop() - delta)
+          false
+      @verticalScrollbar. on 'scroll', =>
+        @scrollTop @verticalScrollbar.scrollTop(),
+          adjustVerticalScrollbar: false
 
   # Public: Get current editor instance if exists.
   #
   # id - The Id of the searched editor as {Number}.
   #
   # Returns the instance of the editor as `JadeCompileView`, null otherwise.
-  getEditor: (id) ->
+  getSourceEditor: (id) ->
     for editor in atom.workspace.getEditors()
       return editor if editor.id?.toString() is id.toString()
     null
@@ -61,13 +76,12 @@ class JadeCompileView extends ScrollView
   # Returns the complete content of the edited code or only the currently
   #  selected text `String`.
   getSelectedCode: ->
-    range = @editor.getSelectedBufferRange()
+    range = @sourceEditor.getSelectedBufferRange()
     code  =
       if range.isEmpty()
-        @editor.getText()
+        @sourceEditor.getText()
       else
-        @editor.getTextInBufferRange(range)
-
+        @sourceEditor.getTextInBufferRange(range)
 
   # Public: Render code using Jade. Note that the evaluation is done
   # in an internal context (sandboxed) thanks to loophole.
@@ -88,61 +102,51 @@ class JadeCompileView extends ScrollView
 
   # Public: Save compiled code.
   #
-  # callback - An optional asynchroneous callback.
+  # callback - The asynchroneous callback.
   #
   # Returns the callback result if any, `undefined` otherwise.
   saveCompiled: (callback) ->
     try
-      text     = @compile @editor.getText()
-      srcPath  = @editor.getPath()
+      text     = @compile @sourceEditor.getText()
+      srcPath  = @sourceEditor.getPath()
       srcExt   = path.extname srcPath
-      destPath = path.join(
-        path.dirname(srcPath), "#{path.basename(srcPath, srcExt)}.html"
-      )
-      fs.writeFileSync destPath, text
+      destPath = path.join (path.dirname srcPath),
+        "#{path.basename srcPath, srcExt}.html"
+      fs.writeFile destPath, text, callback
     catch e
       console.error "jade-compile: #{e.stack}"
-    callback?()
 
-  # Public: Render compile Jade code in the preview editor.
+  # Public: Render compiled code.
   #
-  # callback - An optional asynchroneous callback.
-  #
-  # Returns the callback result if any, `undefined` otherwise.
-  renderCompiled: (callback) ->
+  # Returns `undefined`.
+  renderCompiled: ->
     code = @getSelectedCode()
     try
       text = @compile code
     catch e
       text = e.stack
-    grammar = atom.syntax.selectGrammar 'hello.html', text
-    @compiledCode.empty()
-    for tokens in grammar.tokenizeLines text
-      attributes = class: 'line'
-      @compiledCode.append(EditorView.buildLineHtml {tokens, text, attributes})
+    @getEditor().setText text
 
-    # Match editor styles
-    @compiledCode.css
-      fontSize: atom.config.get('editor.fontSize') or 12
-      fontFamily: atom.config.get 'editor.fontFamily'
-    callback?()
+  # Public: Update compiled code.
+  #
+  # Returns the callback result if any, `undefined` otherwise.
+  updateDisplay: ->
+    # Style cursor to work with new line height
+    lineHeight = (atom.config.get 'editor.lineHeight') or
+      @configDefaults.lineHeight
+    @overlayer.find('.cursor').css 'line-height', lineHeight * 0.8
+    super
 
   # Public: Create a title depending on context usage.
   #
   # Returns the title as `String`.
   getTitle: ->
-    if @editor?
-      "Compiled #{@editor.getTitle()}"
+    if @sourceEditor?
+      "Compiled #{@sourceEditor.getTitle()}"
     else
       'Compiled HTML'
 
   # Public: Get editor's URI.
   #
   # Returns the URI as `String`.
-  getUri: -> "jade-compile://editor/#{@editorId}"
-
-  # Public: Get editor's path.
-  #
-  # Returns the editor's path as `String` it it exists,
-  #  an empty `String` otherwise.
-  getPath: -> @editor?.getPath() or ''
+  getUri: -> "jade-compile://editor/#{@sourceEditorId}"
