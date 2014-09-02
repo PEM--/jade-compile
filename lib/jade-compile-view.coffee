@@ -89,11 +89,12 @@ class JadeCompileView extends EditorView
   # code - The code to render as {String}.
   #
   # Returns the rendered HTML as `String`.
-  compile: (code) ->
+  compile: (code, filename) ->
     html = ''
     try
       allowUnsafeNewFunction ->
         html = jade.render code,
+          filename: filename
           pretty: atom.config.get 'jade-compile.pretty'
           compileDebug: atom.config.get 'jade-compile.compileDebug'
     catch e
@@ -107,7 +108,7 @@ class JadeCompileView extends EditorView
   # Returns the callback result if any, `undefined` otherwise.
   saveCompiled: (callback) ->
     try
-      text     = @compile @sourceEditor.getText()
+      text     = @compile @sourceEditor.getText(), @sourceEditor.getPath()
       srcPath  = @sourceEditor.getPath()
       srcExt   = path.extname srcPath
       destPath = path.join (path.dirname srcPath),
@@ -122,7 +123,7 @@ class JadeCompileView extends EditorView
   renderCompiled: ->
     code = @getSelectedCode()
     try
-      text = @compile code
+      text = @compile code, @sourceEditor.getPath()
     catch e
       text = e.stack
     @getEditor().setText text
