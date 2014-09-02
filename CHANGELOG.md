@@ -1,3 +1,7 @@
+## 0.5.0 - Filters and filename support
+* Filters support for Coffee and Markdown: contribution from [bollwyvl](https://github.com/bollwyvl).
+* Filename support: contribution from [bollwyvl](https://github.com/bollwyvl).
+
 ## 0.4.0 - ReactEditor update
 * Small adaptations for the new ReactEditor API.
 * Update Jade dependency from 1.3.1 to 1.5.0.
