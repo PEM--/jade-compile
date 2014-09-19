@@ -9,7 +9,7 @@
   "repository": "https://github.com/PEM--/jade-compile",
   "license": "MIT",
   "engines": {
-    "atom": ">0.123.0"
+    "atom": ">0.124.0"
   },
   "dependencies": {
     "jade": "^1.5.0",
