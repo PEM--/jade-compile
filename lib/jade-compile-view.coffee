@@ -24,42 +24,13 @@ class JadeCompileView extends EditorView
       @sourceEditor = @getSourceEditor @sourceEditorId
     if @sourceEditor?
       @bindJadeCompileEvents()
-    if atom.config.get 'core.useReactEditor'
-      # set editor grammar to HTML
-      @editor.setGrammar atom.syntax.selectGrammar 'hello.html'
-
-  # Public: Initialize current instance.
-  #
-  # options - Set options for old editor {Dictionnary}.
-  #
-  # Returns `undefined`.
-  initialize: (options) ->
-    # Old EditorView requires mini editor to work properly
-    unless atom.config.get 'core.useReactEditor'
-      options.mini = true
-      super options
-      # set editor grammar to HTML
-      @editor.setGrammar atom.syntax.selectGrammar("hello.html")
-      # mini EditorView doesn't allow changing line height
-      # This is used to force line-height changes
-      @css 'line-height', atom.config.get('editor.lineHeight') or
-        @configDefaults.lineHeight
-
+    @editor.setGrammar atom.syntax.selectGrammar 'hello.html'
   # Public: Bind events on Jade compilation
   #
   # Returns `undefined`.
   bindJadeCompileEvents: ->
-    if atom.config.get('jade-compile.compileOnSave')
+    if atom.config.get 'jade-compile.compileOnSave'
       @subscribe @sourceEditor.buffer, 'saved', => @saveCompiled()
-    unless atom.config.get 'core.useReactEditor'
-      # Add scrolling to mini EditorView
-      @scrollView.on 'mousewheel', (e) =>
-        if delta = e.originalEvent.wheelDeltaY
-          @scrollTop(@scrollTop() - delta)
-          false
-      @verticalScrollbar. on 'scroll', =>
-        @scrollTop @verticalScrollbar.scrollTop(),
-          adjustVerticalScrollbar: false
 
   # Public: Get current editor instance if exists.
   #
@@ -81,7 +52,7 @@ class JadeCompileView extends EditorView
       if range.isEmpty()
         @sourceEditor.getText()
       else
-        @sourceEditor.getTextInBufferRange(range)
+        @sourceEditor.getTextInBufferRange range
 
   # Public: Render code using Jade. Note that the evaluation is done
   # in an internal context (sandboxed) thanks to loophole.
@@ -135,7 +106,7 @@ class JadeCompileView extends EditorView
     # Style cursor to work with new line height
     lineHeight = (atom.config.get 'editor.lineHeight') or
       @configDefaults.lineHeight
-    @overlayer.find('.cursor').css 'line-height', lineHeight * 0.8
+    (@overlayer.find '.cursor').css 'line-height', lineHeight * 0.8
     super
 
   # Public: Create a title depending on context usage.

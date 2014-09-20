@@ -9,10 +9,10 @@
   "repository": "https://github.com/PEM--/jade-compile",
   "license": "MIT",
   "engines": {
-    "atom": ">0.123.0"
+    "atom": ">0.124.0"
   },
   "dependencies": {
-    "jade": "^1.5.0",
+    "jade": "^1.6.0",
     "loophole": "^1.0.0",
     "underscore-plus": "^1.5.1",
     "coffee-script": "^1.8.0",
