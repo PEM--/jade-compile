@@ -29,7 +29,7 @@ class JadeCompileView extends EditorView
   #
   # Returns `undefined`.
   bindJadeCompileEvents: ->
-    if atom.config.get('jade-compile.compileOnSave')
+    if atom.config.get 'jade-compile.compileOnSave'
       @subscribe @sourceEditor.buffer, 'saved', => @saveCompiled()
 
   # Public: Get current editor instance if exists.
@@ -52,7 +52,7 @@ class JadeCompileView extends EditorView
       if range.isEmpty()
         @sourceEditor.getText()
       else
-        @sourceEditor.getTextInBufferRange(range)
+        @sourceEditor.getTextInBufferRange range
 
   # Public: Render code using Jade. Note that the evaluation is done
   # in an internal context (sandboxed) thanks to loophole.
@@ -106,7 +106,7 @@ class JadeCompileView extends EditorView
     # Style cursor to work with new line height
     lineHeight = (atom.config.get 'editor.lineHeight') or
       @configDefaults.lineHeight
-    @overlayer.find('.cursor').css 'line-height', lineHeight * 0.8
+    (@overlayer.find '.cursor').css 'line-height', lineHeight * 0.8
     super
 
   # Public: Create a title depending on context usage.

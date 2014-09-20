@@ -1,3 +1,8 @@
+## 0.6.0 - Windows compatibility
+* Remove `core.useReactEditor`as it fails on Windows: #5, contribution from [Loïc Padier](https://github.com/lPadier).
+* Upgrade Jade: 1.5.0 to 1.6.0.
+* Some minor code changes.
+
 ## 0.5.0 - Filters and filename support
 * Filters support for Coffee and Markdown: contribution from [bollwyvl](https://github.com/bollwyvl).
 * Filename support: contribution from [bollwyvl](https://github.com/bollwyvl).
