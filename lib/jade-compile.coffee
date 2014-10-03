@@ -3,12 +3,25 @@ querystring = require 'querystring'
 JadeCompileView = require './jade-compile-view'
 
 module.exports =
-  # Define default configuration
-  configDefaults:
-    pretty: true
-    compileDebug: true
-    compileOnSave: false
-    focusEditorAfterCompile: true
+  # Define configuration capabilities
+  config:
+    pretty:
+      type: 'boolean'
+      default: true
+      description: 'Ensure pretty reading, \
+        unset it to check production results.'
+    compileDebug:
+      type: 'boolean'
+      default: true
+      description: 'Additional logs when compilation fails.'
+    compileOnSave:
+      type: 'boolean'
+      default: false
+      description: 'On-the-fly compilation.'
+    focusEditorAfterCompile:
+      type: 'boolean'
+      default: true
+      description: 'Unset it if you want to fasten copy/paste workflows.'
 
   # Public: Activate the plugin.
   #

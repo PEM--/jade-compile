@@ -1,3 +1,6 @@
+## 0.7.0 - Adaptation to new configuration scheme
+* Adapt to Atom changes on the configuration scheme: [Config API Improvements](http://blog.atom.io/2014/10/02/config-api-has-schema.html).
+
 ## 0.6.0 - Windows compatibility
 * Remove `core.useReactEditor`as it fails on Windows: #5, contribution from [Loïc Padier](https://github.com/lPadier).
 * Upgrade Jade: 1.5.0 to 1.6.0.
