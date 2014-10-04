@@ -2,7 +2,7 @@
   "name": "jade-compile",
   "main": "./lib/jade-compile",
   "version": "0.7.1",
-  "description": "Preview/save compiled Jade in Atom",
+  "description": "DEPRECATED",
   "activationEvents": [
     "jade-compile:compile"
   ],

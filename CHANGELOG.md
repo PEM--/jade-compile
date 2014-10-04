@@ -1,3 +1,6 @@
+## 0.8.0 - Deprecation warning
+* Deprecation warning before Atom's package unpublishing.
+
 ## 0.7.1 - Bug fix
 * Compile on save refactoring made jade compilation failing.
 

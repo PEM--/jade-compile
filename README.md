@@ -1,5 +1,7 @@
 # jade-compile package
 
+:warning: **DEPRECATED: Please use a far better alternative: [Preview](https://atom.io/packages/preview)** :warning:
+
 :eyeglasses: Simple previewer package that compiles [Jade](http://jade-lang.com/) to HTML in [Atom.io](https://atom.io):
 * Mac/Linux/Windows: **CTRL**+**ALT**+**j**
 
