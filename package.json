@@ -1,7 +1,7 @@
 {
   "name": "jade-compile",
   "main": "./lib/jade-compile",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "DEPRECATED",
   "activationEvents": [
     "jade-compile:compile"
