@@ -1,3 +1,6 @@
+## 0.7.1 - Bug fix
+* Compile on save refactoring made jade compilation failing.
+
 ## 0.7.0 - Adaptation to new configuration scheme
 * Adapt to Atom changes on the configuration scheme: [Config API Improvements](http://blog.atom.io/2014/10/02/config-api-has-schema.html).
 

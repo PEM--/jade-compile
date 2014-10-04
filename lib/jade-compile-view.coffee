@@ -20,17 +20,32 @@ class JadeCompileView extends EditorView
   # Returns the instanciated object as `JadeCompileView`.
   constructor: ({@sourceEditorId, @sourceEditor}) ->
     super
+    # Used for unsubscribing callbacks on editor text buffer
+    @disposables = []
     if @sourceEditorId? and not @sourceEditor
       @sourceEditor = @getSourceEditor @sourceEditorId
     if @sourceEditor?
       @bindJadeCompileEvents()
     @editor.setGrammar atom.syntax.selectGrammar 'hello.html'
+
   # Public: Bind events on Jade compilation
   #
   # Returns `undefined`.
   bindJadeCompileEvents: ->
     if atom.config.get 'jade-compile.compileOnSave'
-      @subscribe @sourceEditor.buffer, 'saved', => @saveCompiled()
+      buffer = @sourceEditor.getBuffer()
+      @disposables.push buffer.onDidSave =>
+        @renderCompiled()
+        JadeCompileView.saveCompiled @sourceEditor
+      @disposables.push buffer.onDidReload =>
+        @renderCompiled()
+        JadeCompileView.saveCompiled @sourceEditor
+
+  # Public: Called when view is destroyed
+  #
+  # Returns `undefined`.
+  destroy: ->
+    disposable.dispose() for disposable in @disposables
 
   # Public: Get current editor instance if exists.
   #
@@ -54,60 +69,16 @@ class JadeCompileView extends EditorView
       else
         @sourceEditor.getTextInBufferRange range
 
-  # Public: Render code using Jade. Note that the evaluation is done
-  # in an internal context (sandboxed) thanks to loophole.
-  #
-  # code - The code to render as {String}.
-  #
-  # Returns the rendered HTML as `String`.
-  compile: (code, filename) ->
-    html = ''
-    try
-      allowUnsafeNewFunction ->
-        html = jade.render code,
-          filename: filename
-          pretty: atom.config.get 'jade-compile.pretty'
-          compileDebug: atom.config.get 'jade-compile.compileDebug'
-    catch e
-      html = e.message
-    html
-
-  # Public: Save compiled code.
-  #
-  # callback - The asynchroneous callback.
-  #
-  # Returns the callback result if any, `undefined` otherwise.
-  saveCompiled: (callback) ->
-    try
-      text     = @compile @sourceEditor.getText(), @sourceEditor.getPath()
-      srcPath  = @sourceEditor.getPath()
-      srcExt   = path.extname srcPath
-      destPath = path.join (path.dirname srcPath),
-        "#{path.basename srcPath, srcExt}.html"
-      fs.writeFile destPath, text, callback
-    catch e
-      console.error "jade-compile: #{e.stack}"
-
   # Public: Render compiled code.
   #
   # Returns `undefined`.
   renderCompiled: ->
     code = @getSelectedCode()
     try
-      text = @compile code, @sourceEditor.getPath()
+      text = JadeCompileView.compile code
     catch e
       text = e.stack
     @getEditor().setText text
-
-  # Public: Update compiled code.
-  #
-  # Returns the callback result if any, `undefined` otherwise.
-  updateDisplay: ->
-    # Style cursor to work with new line height
-    lineHeight = (atom.config.get 'editor.lineHeight') or
-      @configDefaults.lineHeight
-    (@overlayer.find '.cursor').css 'line-height', lineHeight * 0.8
-    super
 
   # Public: Create a title depending on context usage.
   #
@@ -122,3 +93,36 @@ class JadeCompileView extends EditorView
   #
   # Returns the URI as `String`.
   getUri: -> "jade-compile://editor/#{@sourceEditorId}"
+
+  # Public: Render code using Jade. Note that the evaluation is done
+  # in an internal context (sandboxed) thanks to loophole.
+  #
+  # code - The code to render as {String}.
+  #
+  # Returns the rendered HTML as `String`.
+  @compile: (code) ->
+    html = ''
+    try
+      allowUnsafeNewFunction ->
+        html = jade.render code,
+          pretty: atom.config.get 'jade-compile.pretty'
+          compileDebug: atom.config.get 'jade-compile.compileDebug'
+    catch e
+      html = e.message
+    html
+
+  # Public: Save compiled code.
+  #
+  # callback - The asynchroneous callback.
+  #
+  # Returns the callback result if any, `undefined` otherwise.
+  saveCompiled: (editor, callback) ->
+    try
+      text     = JadeCompileView.compile editor.getText()
+      srcPath  = editor.getPath()
+      srcExt   = path.extname srcPath
+      destPath = path.join (path.dirname srcPath),
+        "#{path.basename srcPath, srcExt}.html"
+      fs.writeFile destPath, text, callback
+    catch e
+      console.error "jade-compile: #{e.stack}"
